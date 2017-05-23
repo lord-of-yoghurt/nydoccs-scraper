@@ -1,7 +1,7 @@
 ENV['SINATRA_ENV'] ||= "development"
 
 require 'bundler/setup'
-Bundler.require
+Bundler.require(:default, ENV['SINATRA_ENV'])
 
 # DB connection when needed
 

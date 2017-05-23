@@ -9,6 +9,7 @@ gem 'activerecord', require: 'active_record'
 gem 'sinatra-activerecord', require: 'sinatra/activerecord'
 gem 'shotgun'
 gem 'require_all'
+gem 'smarter_csv'
 
 group :development do
   gem 'sqlite3'
