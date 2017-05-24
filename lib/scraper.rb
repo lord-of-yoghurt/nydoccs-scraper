@@ -5,39 +5,51 @@ class Scraper
   # return a hash with inmate info
   def self.scrape(fld1, fld2, fld3)
     html = Nokogiri::HTML(DINSubmitter.get_data(fld1, fld2, fld3))
-    # REGEX TO USE LATER FOR PARSING CSV: /\d{2}[\s\-\_]?[A-Za-z]{1}[\s\-\_]?\d{4}/
 
-    # key: html.at("#t1b").text.strip
-
-    # value: html.at("td[headers='t1b']").text.gsub("\u00A0", '').strip
-    # t1a..t1l for first table
-
-    # second table: html.css("td[headers='crime']").map(&:text)
-
-    # third table headers: t3a..t3l
-
-    keys = []
-    values = []
+    info = Hash.new
 
     # scrape the first table
     ('t1a'..'t1l').to_a.each do |key|
-      keys << html.at("\##{key}").text.gsub("\u00A0", '').strip
-      values << html.at("td[headers=\"#{key}\"]").text.gsub("\u00A0", '').strip
+      info[html.at("\##{key}").text.clean_up] =
+        html.at("td[headers=\"#{key}\"]").text.clean_up
     end
 
-    # scrape the second table
-    crimes = html.css("td[headers='crime']").map do |node|
-      node.text.gsub("\u00A0", '').strip
-    end.reject{|s| s.empty?}
+    # scrape crime info
+    # {
+    #   crime1: "ATT RAPE - CLASS C",
+    #   crime2: "... - CLASS A",
+    # }
+    crime_names = html.css("td[headers='crime']")
+                      .text
+                      .split("\r\n")
+                      .map(&:clean_up)
+                      .reject(&:blank?)
 
-    klasses = html.css("td[headers='class']").map do |node|
-      node.text.gsub("\u00A0", '').strip
-    end.reject{|s| s.empty?}
+    crime_classes = html.css("td[headers='class']")
+                        .text
+                        .split(/\s+/)
+                        .map(&:clean_up)
+                        .reject(&:blank?)
 
-    keys += crimes
-    values += klasses
+    crimes = crime_names.zip(crime_classes).map do |a|
+      a.join(" - CLASS ")
+    end
 
-    inmate_info = Hash[keys.zip(values)]
-    inmate_info
+    crimes.each_with_index do |c, i|
+      info["crime#{i+1}"] = c
+    end
+
+    # scrape the third table
+    ('t3a'..'t3l').to_a.each do |key|
+      info[html.at("\##{key}").text.clean_up] =
+        html.at("td[headers=\"#{key}\"]").text.clean_up
+    end
+
+  end
+end
+
+class String
+  def clean_up
+    self.gsub("\u00A0", '').strip
   end
 end

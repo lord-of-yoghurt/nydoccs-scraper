@@ -16,5 +16,5 @@
 
 /NOTES.md
 
-/app/test_request.rb
-/assets/test_csv.csv
+/fixtures/*
+/lib/time_method.rb
