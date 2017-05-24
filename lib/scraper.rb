@@ -12,17 +12,30 @@ class Scraper
     # value: html.at("td[headers='t1b']").text.gsub("\u00A0", '').strip
     # t1a..t1l for first table
 
-    # second table headers: crime, class
+    # second table: html.css("td[headers='crime']").map(&:text)
 
     # third table headers: t3a..t3l
 
     keys = []
     values = []
 
+    # scrape the first table
     ('t1a'..'t1l').to_a.each do |key|
       keys << html.at("\##{key}").text.gsub("\u00A0", '').strip
       values << html.at("td[headers=\"#{key}\"]").text.gsub("\u00A0", '').strip
     end
+
+    # scrape the second table
+    crimes = html.css("td[headers='crime']").map do |node|
+      node.text.gsub("\u00A0", '').strip
+    end.reject{|s| s.empty?}
+
+    klasses = html.css("td[headers='class']").map do |node|
+      node.text.gsub("\u00A0", '').strip
+    end.reject{|s| s.empty?}
+
+    keys += crimes
+    values += klasses
 
     inmate_info = Hash[keys.zip(values)]
     inmate_info
