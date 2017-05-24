@@ -5,7 +5,6 @@ class Scraper
   # return a hash with inmate info
   def self.scrape(fld1, fld2, fld3)
     html = Nokogiri::HTML(DINSubmitter.get_data(fld1, fld2, fld3))
-
     info = Hash.new
 
     # scrape the first table
@@ -16,8 +15,8 @@ class Scraper
 
     # scrape crime info
     # {
-    #   crime1: "ATT RAPE - CLASS C",
-    #   crime2: "... - CLASS A",
+    #   "crime1" => "ATT RAPE - CLASS C",
+    #   "crime2" => "... - CLASS A",
     # }
     crime_names = html.css("td[headers='crime']")
                       .text
@@ -45,11 +44,12 @@ class Scraper
         html.at("td[headers=\"#{key}\"]").text.clean_up
     end
 
+    info
   end
 end
 
 class String
   def clean_up
-    self.gsub("\u00A0", '').strip
+    self.strip.gsub("\u00A0", '').gsub(/\r\n\s+/, ' ').strip
   end
 end
