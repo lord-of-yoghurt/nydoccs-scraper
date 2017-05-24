@@ -50,6 +50,6 @@ end
 
 class String
   def clean_up
-    self.strip.gsub("\u00A0", '').gsub(/\r\n\s+/, ' ').strip
+    self.gsub("\u00A0", '').gsub(/\r\n\s+/, ' ').strip
   end
 end
