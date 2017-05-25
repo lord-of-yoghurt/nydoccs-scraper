@@ -10,7 +10,7 @@ gem 'sinatra-activerecord', require: 'sinatra/activerecord'
 gem 'shotgun'
 gem 'require_all'
 gem 'smarter_csv'
-gem 'httparty'
+gem 'curb'
 
 group :development do
   gem 'sqlite3'
