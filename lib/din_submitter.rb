@@ -1,7 +1,3 @@
-require 'net/http'
-require 'uri'
-require 'resolv-replace'
-
 class DINSubmitter
 
   URL = "http://nysdoccslookup.doccs.ny.gov/GCA00P00/WIQ1/WINQ000"
@@ -13,9 +9,9 @@ class DINSubmitter
 
     http = Curl.post(URL, {
       K01: "WINQ000",
-      M00_DIN_FLD1I: "#{fld1}",
-      M00_DIN_FLD2I: "#{fld2}",
-      M00_DIN_FLD3I: "#{fld3}"
+      M00_DIN_FLD1I: fld1,
+      M00_DIN_FLD2I: fld2,
+      M00_DIN_FLD3I: fld3
     }) do |http|
       http.headers["Content-Type"] = "application/x-www-form-encoded"
     end
