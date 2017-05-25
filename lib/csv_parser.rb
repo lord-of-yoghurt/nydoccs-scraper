@@ -1,8 +1,8 @@
 class CSVParser
 
   # scan the csv with regex
-  # turn each DIN into an array of three parts: ["15", "A", "2000"]
-  # the return value should be an array of arrays for every DIN
+  # split each DIN into an array of three parts: ["15", "A", "2000"]
+  # the return value should be an array of DIN arrays
   def self.parse(csv)
     result = []
 

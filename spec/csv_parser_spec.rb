@@ -8,6 +8,10 @@ describe CSVParser do
     expect(@data).to be_a(Array)
   end
 
+  it 'gets rid of non-alphanumeric symbols' do
+    expect(@data.size).to eq(12)
+  end
+
   it 'parses each DIN as a nested array with three parts' do
     expect(@data[0]).to eq(["15", "A", "2000"])
   end
